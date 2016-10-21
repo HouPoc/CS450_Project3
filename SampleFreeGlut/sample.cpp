@@ -337,9 +337,9 @@ Display( )
 	gluLookAt(4., 0., 3., 0., 0., 0., 0., 1., 0.);
 	glEnable(GL_LIGHTING);
 	//Put lights in 
-	//SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
+	SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
 	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
-	//SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
+	SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
 	if (Light0)
 		glEnable(GL_LIGHT0);
 	else
