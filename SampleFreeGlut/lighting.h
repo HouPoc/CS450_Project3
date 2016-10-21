@@ -36,7 +36,7 @@ void SetPointLight(int ilight, float x, float y, float z, float r, float g, floa
 	glLightf(ilight, GL_CONSTANT_ATTENUATION, 1.);
 	glLightf(ilight, GL_LINEAR_ATTENUATION, 0.);
 	glLightf(ilight, GL_QUADRATIC_ATTENUATION, 0.);
-	glEnable(ilight);
+	//glEnable(ilight);
 }
 
 void SetSpotLight(int ilight, float x, float y, float z, float xdir, float ydir, float zdir, float r, float g, float b)
@@ -51,7 +51,7 @@ void SetSpotLight(int ilight, float x, float y, float z, float xdir, float ydir,
 	glLightf(ilight, GL_CONSTANT_ATTENUATION, 1.);
 	glLightf(ilight, GL_LINEAR_ATTENUATION, 0.);
 	glLightf(ilight, GL_QUADRATIC_ATTENUATION, 0.);
-	glEnable(ilight);
+	//glEnable(ilight);
 }
 
 

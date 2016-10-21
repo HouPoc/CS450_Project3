@@ -181,6 +181,8 @@ int		WhichColor;				// index into Colors[ ]
 int		WhichProjection;		// ORTHO or PERSP
 int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
+bool	Freeze;					// Animation control
+bool	Light0, Light1, Light2;	// Light control
 
 
 // function prototypes:
@@ -338,8 +340,18 @@ Display( )
 	//SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
 	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
 	//SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
-	
-
+	if (Light0)
+		glEnable(GL_LIGHT0);
+	else
+		glDisable(GL_LIGHT0);
+	if (Light1)
+		glEnable(GL_LIGHT1);
+	else
+		glDisable(GL_LIGHT1);
+	if (Light2)
+		glEnable(GL_LIGHT2);
+	else
+		glDisable(GL_LIGHT2);
 	
 
 
@@ -410,6 +422,7 @@ Display( )
 	glutSolidTorus(.4, 1., 20, 20);
 	glPopMatrix();
 	
+	glDisable(GL_LIGHTING);
 	// possibly draw the axes:
 	/*
 	if (AxesOn != 0)
@@ -748,6 +761,27 @@ Keyboard( unsigned char c, int x, int y )
 			WhichProjection = PERSP;
 			break;
 
+		case 'f':
+		case 'F':
+			Freeze = !Freeze;
+			if (Freeze)
+				glutIdleFunc(NULL);
+			else
+				glutIdleFunc(Animate);
+			break;
+
+		case '0':
+			Light0 = !Light0;
+			break;
+
+		case '1':
+			Light1 = !Light1;
+			break;
+
+		case '2':
+			Light2 = !Light2;
+			break;
+
 		case 'q':
 		case 'Q':
 		case ESCAPE:
@@ -862,6 +896,9 @@ Reset( )
 	WhichColor = WHITE;
 	WhichProjection = PERSP;
 	Xrot = Yrot = 0.;
+	Light0 = FALSE;
+	Light1 = FALSE;
+	Light2 = FALSE;
 }
 
 
