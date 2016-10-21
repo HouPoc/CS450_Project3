@@ -335,8 +335,8 @@ Display( )
 	glEnable(GL_LIGHTING);
 	//Put lights in 
 	//SetSpotLight(GL_LIGHT0, 0., 0., 0., 0., -1., 0., 0., 0., 1.);		//The spot light
-	//SetPointLight(GL_LIGHT1, 0., 0., 0., 1., 1., 1.);					//White point light  white
-	SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
+	SetPointLight(GL_LIGHT1, 1., 1., 1., 1., 1., 1.);					//White point light  white
+	//SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
 	// set the eye position, look-at position, and up-vector:
 
 	
@@ -380,7 +380,7 @@ Display( )
 
 
 	// draw the cube:
-	/*
+	
 	glPushMatrix();							
 	glShadeModel(GL_SMOOTH);
 	glTranslatef(0., .5, 2.);
@@ -388,19 +388,19 @@ Display( )
 	glColor3f(1., 0., 0.);					//red
 	glutSolidCube(.7);
 	glPopMatrix();
-	*/
+	
 	// draw the sphere						//yellow
-	glShadeModel(GL_SMOOTH);
-	glMatrixMode(GL_MODELVIEW);
+	
 	glPushMatrix();
-	//glTranslatef(0., -1., -.5);
+	glTranslatef(0., -1., -.5);
+	glShadeModel(GL_SMOOTH);
 	SetMaterial(1.0, 1.0, 0.0, 50.0);
 	glColor3f(1., 1., 0.);
 	glutSolidSphere(1., 20, 16);
 	glPopMatrix();
 	
 	//draw the Torus						//green
-	/*
+	
 	glPushMatrix();
 	glShadeModel(GLU_FLAT);
 	glTranslatef(0., 1., -2.);
@@ -408,17 +408,16 @@ Display( )
 	glColor3f(0., 1., 0.);
 	glutSolidTorus(.4, 1., 20, 20);
 	glPopMatrix();
-	*/
+	
 	// possibly draw the axes:
-	/*
+	
 	if (AxesOn != 0)
 	{
 		glPushMatrix();
-		glColor3fv(&Colors[WhichColor][0]);
 		glCallList(AxesList);
 		glPopMatrix();
 	}
-	*/
+	
 	// draw some gratuitous text that is fixed on the screen:
 	//
 	// the projection matrix is reset to define a scene whose
@@ -720,6 +719,7 @@ InitLists( )
 
 	AxesList = glGenLists( 1 );
 	glNewList( AxesList, GL_COMPILE );
+	glColor3f(1., 1., 1.);
 		glLineWidth( AXES_WIDTH );
 			Axes( 1.5 );
 		glLineWidth( 1. );
