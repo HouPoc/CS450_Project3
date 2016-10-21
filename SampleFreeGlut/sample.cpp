@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -11,11 +12,9 @@
 #include "glew.h"
 #endif
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include "glut.h"
 
 
+#include "lighting.h"
 //	This is a sample OpenGL / GLUT program
 //
 //	The objective is to draw a 3d object and change the color of the axes
@@ -175,8 +174,7 @@ int		ActiveButton;			// current button that is down
 GLuint	AxesList;				// list to hold the axes
 int		AxesOn;					// != 0 means to draw the axes
 int		DebugOn;				// != 0 means to print debugging info
-int		DepthCueOn;				// != 0 means to use intensity depth cueing
-GLuint	BoxList;				// object display list
+int		DepthCueOn;				// != 0 means to use intensity depth cueing_
 int		MainWindow;				// window id for main graphics window
 float	Scale;					// scaling factor
 int		WhichColor;				// index into Colors[ ]
@@ -277,7 +275,7 @@ Animate( )
 }
 
 
-// draw the complete scene:
+// draw the complete scene: display_1
 
 void
 Display( )
@@ -333,10 +331,14 @@ Display( )
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity( );
 
-
+	glEnable(GL_LIGHTING);
+	//Put lights in 
+	//SetSpotLight(GL_LIGHT0, 0., 0., 0., 0., -1., 0., 0., 0., 1.);		//The spot light
+	//SetPointLight(GL_LIGHT1, 0., 3., -1., 1., 1., 1.);					//White point light  white
+	SetPointLight(GL_LIGHT2, 0., 4., -1.3, 0., 1., 0.);					//White point light      red
 	// set the eye position, look-at position, and up-vector:
 
-	gluLookAt( 0., 0., 3.,     0., 0., 0.,     0., 1., 0. );
+	gluLookAt( 4., 0., 3.,     0., 0., 0.,     0., 1., 0. );
 
 
 	// rotate the scene:
@@ -369,31 +371,48 @@ Display( )
 	}
 
 
-	// possibly draw the axes:
-
-	if( AxesOn != 0 )
-	{
-		glColor3fv( &Colors[WhichColor][0] );
-		glCallList( AxesList );
-	}
-
+	
 
 	// since we are using glScalef( ), be sure normals get unitized:
 
 	glEnable( GL_NORMALIZE );
 
 
-	// draw the current object:
+	// draw the cube:
+	glPushMatrix();
+	glShadeModel(GL_SMOOTH);
+	glTranslatef(0., .5, 2.);
+	SetMaterial(1.0, 0.0, 0.0, 10.0);
+	glColor3f(1., 0., 0.);
+	glutSolidCube(.7);
+	glPopMatrix();
+	// draw the sphere
+	glPushMatrix();
+	glShadeModel(GL_SMOOTH);
+	glTranslatef(0., -1., -.5);
+	SetMaterial(1.0, 1.0, 0.0, 5.0);
+	glColor3f(1., 1., 0.);
+	glutSolidSphere(.5, 20, 20);
+	glPopMatrix();
+	//draw the Torus
+	glPushMatrix();
+	glShadeModel(GLU_FLAT);
+	glTranslatef(0., 1., -2.);
+	SetMaterial(0.0, 0.0, 1.0, 1.0);
+	glColor3f(0., 0., 1.);
+	glutSolidTorus(.3, 1., 20, 20);
+	glPopMatrix();
 
-	glCallList( BoxList );
+	// possibly draw the axes:
 
-
-	// draw some gratuitous text that just rotates on top of the scene:
-
-	glDisable( GL_DEPTH_TEST );
-	glColor3f( 0., 1., 1. );
-	DoRasterString( 0., 1., 0., "Text That Moves" );
-
+	if (AxesOn != 0)
+	{
+		glPushMatrix();
+		SetMaterial(1.0, 1.0, 1.0, 1.0);
+		glColor3fv(&Colors[WhichColor][0]);
+		glCallList(AxesList);
+		glPopMatrix();
+	}
 
 	// draw some gratuitous text that is fixed on the screen:
 	//
@@ -411,8 +430,6 @@ Display( )
 	gluOrtho2D( 0., 100.,     0., 100. );
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity( );
-	glColor3f( 1., 1., 1. );
-	DoRasterString( 5., 5., 0., "Text That Doesn't" );
 
 
 	// swap the double-buffered framebuffers:
@@ -692,65 +709,7 @@ InitGraphics( )
 void
 InitLists( )
 {
-	float dx = BOXSIZE / 2.f;
-	float dy = BOXSIZE / 2.f;
-	float dz = BOXSIZE / 2.f;
 	glutSetWindow( MainWindow );
-
-	// create the object:
-
-	BoxList = glGenLists( 1 );
-	glNewList( BoxList, GL_COMPILE );
-
-		glBegin( GL_QUADS );
-
-		/*	glColor3f( 0., 0., 1. );
-			glNormal3f( 0., 0.,  1. );
-				glVertex3f( -dx, -dy,  dz );
-				glVertex3f(  dx, -dy,  dz );
-				glVertex3f(  dx,  dy,  dz );
-				glVertex3f( -dx,  dy,  dz );
-
-			glNormal3f( 0., 0., -1. );
-				glTexCoord2f( 0., 0. );
-				glVertex3f( -dx, -dy, -dz );
-				glTexCoord2f( 0., 1. );
-				glVertex3f( -dx,  dy, -dz );
-				glTexCoord2f( 1., 1. );
-				glVertex3f(  dx,  dy, -dz );
-				glTexCoord2f( 1., 0. );
-				glVertex3f(  dx, -dy, -dz );
-
-			glColor3f( 1., 0., 0. );
-			glNormal3f(  1., 0., 0. );
-				glVertex3f(  dx, -dy,  dz );
-				glVertex3f(  dx, -dy, -dz );
-				glVertex3f(  dx,  dy, -dz );
-				glVertex3f(  dx,  dy,  dz );
-
-			glNormal3f( -1., 0., 0. );
-				glVertex3f( -dx, -dy,  dz );
-				glVertex3f( -dx,  dy,  dz );
-				glVertex3f( -dx,  dy, -dz );
-				glVertex3f( -dx, -dy, -dz );
-
-			glColor3f( 0., 1., 0. );
-			glNormal3f( 0.,  1., 0. );
-				glVertex3f( -dx,  dy,  dz );
-				glVertex3f(  dx,  dy,  dz );
-				glVertex3f(  dx,  dy, -dz );
-				glVertex3f( -dx,  dy, -dz );
-
-			glNormal3f( 0., -1., 0. );
-				glVertex3f( -dx, -dy,  dz );
-				glVertex3f( -dx, -dy, -dz );
-				glVertex3f(  dx, -dy, -dz );
-				glVertex3f(  dx, -dy,  dz );
-				*/
-		glEnd( );
-
-	glEndList( );
-
 
 	// create the axes:
 
