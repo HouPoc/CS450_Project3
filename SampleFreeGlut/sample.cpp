@@ -335,8 +335,8 @@ Display( )
 	gluLookAt(4., 0., 3., 0., 0., 0., 0., 1., 0.);
 	glEnable(GL_LIGHTING);
 	//Put lights in 
-	//SetSpotLight(GL_LIGHT0, 0., 0., 0., 0., -1., 0., 0., 0., 1.);		//The spot light		blue
-	//SetPointLight(GL_LIGHT1, 1., 1., 1., 1., 1., 1.);					//White point light		white
+	//SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
+	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
 	//SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
 	
 
@@ -405,20 +405,20 @@ Display( )
 	glPushMatrix();
 	glShadeModel(GLU_FLAT);
 	glTranslatef(0., 1., -2.);
-	SetMaterial(0.0, 0.0, 1.0, 1.0);
+	SetMaterial(0.0, 1.0, 0.0, 1.0);
 	glColor3f(0., 1., 0.);
 	glutSolidTorus(.4, 1., 20, 20);
 	glPopMatrix();
 	
 	// possibly draw the axes:
-	
+	/*
 	if (AxesOn != 0)
 	{
 		glPushMatrix();
 		glCallList(AxesList);
 		glPopMatrix();
 	}
-	
+	*/
 	// draw some gratuitous text that is fixed on the screen:
 	//
 	// the projection matrix is reset to define a scene whose
