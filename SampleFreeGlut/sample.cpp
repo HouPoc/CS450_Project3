@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -11,11 +12,9 @@
 #include "glew.h"
 #endif
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include "glut.h"
 
 
+#include "lighting.h"
 //	This is a sample OpenGL / GLUT program
 //
 //	The objective is to draw a 3d object and change the color of the axes
@@ -175,14 +174,15 @@ int		ActiveButton;			// current button that is down
 GLuint	AxesList;				// list to hold the axes
 int		AxesOn;					// != 0 means to draw the axes
 int		DebugOn;				// != 0 means to print debugging info
-int		DepthCueOn;				// != 0 means to use intensity depth cueing
-GLuint	BoxList;				// object display list
+int		DepthCueOn;				// != 0 means to use intensity depth cueing_
 int		MainWindow;				// window id for main graphics window
 float	Scale;					// scaling factor
 int		WhichColor;				// index into Colors[ ]
 int		WhichProjection;		// ORTHO or PERSP
 int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
+bool	Freeze;					// Animation control
+bool	Light0, Light1, Light2;	// Light control
 
 
 // function prototypes:
@@ -277,7 +277,7 @@ Animate( )
 }
 
 
-// draw the complete scene:
+// draw the complete scene: display_1
 
 void
 Display( )
@@ -333,17 +333,33 @@ Display( )
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity( );
 
-
 	// set the eye position, look-at position, and up-vector:
-
-	gluLookAt( 0., 0., 3.,     0., 0., 0.,     0., 1., 0. );
+	gluLookAt(4., 0., 3., 0., 0., 0., 0., 1., 0.);
+	glEnable(GL_LIGHTING);
+	//Put lights in 
+	//SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
+	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
+	//SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
+	if (Light0)
+		glEnable(GL_LIGHT0);
+	else
+		glDisable(GL_LIGHT0);
+	if (Light1)
+		glEnable(GL_LIGHT1);
+	else
+		glDisable(GL_LIGHT1);
+	if (Light2)
+		glEnable(GL_LIGHT2);
+	else
+		glDisable(GL_LIGHT2);
+	
 
 
 	// rotate the scene:
 
 	glRotatef( (GLfloat)Yrot, 0., 1., 0. );
 	glRotatef( (GLfloat)Xrot, 1., 0., 0. );
-
+	
 
 	// uniformly scale the scene:
 
@@ -369,32 +385,53 @@ Display( )
 	}
 
 
-	// possibly draw the axes:
-
-	if( AxesOn != 0 )
-	{
-		glColor3fv( &Colors[WhichColor][0] );
-		glCallList( AxesList );
-	}
-
+	
 
 	// since we are using glScalef( ), be sure normals get unitized:
 
 	glEnable( GL_NORMALIZE );
 
 
-	// draw the current object:
-
-	glCallList( BoxList );
-
-
-	// draw some gratuitous text that just rotates on top of the scene:
-
-	glDisable( GL_DEPTH_TEST );
-	glColor3f( 0., 1., 1. );
-	DoRasterString( 0., 1., 0., "Text That Moves" );
-
-
+	// draw the cube:
+	
+	glPushMatrix();							
+	glShadeModel(GL_SMOOTH);
+	glTranslatef(0., .5, 2.);
+	SetMaterial(1.0, 0.0, 0.0, 10.0);
+	glColor3f(1., 0., 0.);					//red
+	glutSolidCube(.7);
+	glPopMatrix();
+	
+	// draw the sphere						//yellow
+	
+	glPushMatrix();
+	glTranslatef(0., -1., -.5);
+	glShadeModel(GL_SMOOTH);
+	SetMaterial(1.0, 1.0, 0.0, 50.0);
+	glColor3f(1., 1., 0.);
+	glutSolidSphere(1., 20, 16);
+	glPopMatrix();
+	
+	//draw the Torus						//green
+	
+	glPushMatrix();
+	glShadeModel(GLU_FLAT);
+	glTranslatef(0., 1., -2.);
+	SetMaterial(0.0, 1.0, 0.0, 1.0);
+	glColor3f(0., 1., 0.);
+	glutSolidTorus(.4, 1., 20, 20);
+	glPopMatrix();
+	
+	glDisable(GL_LIGHTING);
+	// possibly draw the axes:
+	/*
+	if (AxesOn != 0)
+	{
+		glPushMatrix();
+		glCallList(AxesList);
+		glPopMatrix();
+	}
+	*/
 	// draw some gratuitous text that is fixed on the screen:
 	//
 	// the projection matrix is reset to define a scene whose
@@ -411,8 +448,6 @@ Display( )
 	gluOrtho2D( 0., 100.,     0., 100. );
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity( );
-	glColor3f( 1., 1., 1. );
-	DoRasterString( 5., 5., 0., "Text That Doesn't" );
 
 
 	// swap the double-buffered framebuffers:
@@ -692,70 +727,13 @@ InitGraphics( )
 void
 InitLists( )
 {
-	float dx = BOXSIZE / 2.f;
-	float dy = BOXSIZE / 2.f;
-	float dz = BOXSIZE / 2.f;
 	glutSetWindow( MainWindow );
-
-	// create the object:
-
-	BoxList = glGenLists( 1 );
-	glNewList( BoxList, GL_COMPILE );
-
-		glBegin( GL_QUADS );
-
-		/*	glColor3f( 0., 0., 1. );
-			glNormal3f( 0., 0.,  1. );
-				glVertex3f( -dx, -dy,  dz );
-				glVertex3f(  dx, -dy,  dz );
-				glVertex3f(  dx,  dy,  dz );
-				glVertex3f( -dx,  dy,  dz );
-
-			glNormal3f( 0., 0., -1. );
-				glTexCoord2f( 0., 0. );
-				glVertex3f( -dx, -dy, -dz );
-				glTexCoord2f( 0., 1. );
-				glVertex3f( -dx,  dy, -dz );
-				glTexCoord2f( 1., 1. );
-				glVertex3f(  dx,  dy, -dz );
-				glTexCoord2f( 1., 0. );
-				glVertex3f(  dx, -dy, -dz );
-
-			glColor3f( 1., 0., 0. );
-			glNormal3f(  1., 0., 0. );
-				glVertex3f(  dx, -dy,  dz );
-				glVertex3f(  dx, -dy, -dz );
-				glVertex3f(  dx,  dy, -dz );
-				glVertex3f(  dx,  dy,  dz );
-
-			glNormal3f( -1., 0., 0. );
-				glVertex3f( -dx, -dy,  dz );
-				glVertex3f( -dx,  dy,  dz );
-				glVertex3f( -dx,  dy, -dz );
-				glVertex3f( -dx, -dy, -dz );
-
-			glColor3f( 0., 1., 0. );
-			glNormal3f( 0.,  1., 0. );
-				glVertex3f( -dx,  dy,  dz );
-				glVertex3f(  dx,  dy,  dz );
-				glVertex3f(  dx,  dy, -dz );
-				glVertex3f( -dx,  dy, -dz );
-
-			glNormal3f( 0., -1., 0. );
-				glVertex3f( -dx, -dy,  dz );
-				glVertex3f( -dx, -dy, -dz );
-				glVertex3f(  dx, -dy, -dz );
-				glVertex3f(  dx, -dy,  dz );
-				*/
-		glEnd( );
-
-	glEndList( );
-
 
 	// create the axes:
 
 	AxesList = glGenLists( 1 );
 	glNewList( AxesList, GL_COMPILE );
+	glColor3f(1., 1., 1.);
 		glLineWidth( AXES_WIDTH );
 			Axes( 1.5 );
 		glLineWidth( 1. );
@@ -781,6 +759,27 @@ Keyboard( unsigned char c, int x, int y )
 		case 'p':
 		case 'P':
 			WhichProjection = PERSP;
+			break;
+
+		case 'f':
+		case 'F':
+			Freeze = !Freeze;
+			if (Freeze)
+				glutIdleFunc(NULL);
+			else
+				glutIdleFunc(Animate);
+			break;
+
+		case '0':
+			Light0 = !Light0;
+			break;
+
+		case '1':
+			Light1 = !Light1;
+			break;
+
+		case '2':
+			Light2 = !Light2;
 			break;
 
 		case 'q':
@@ -897,6 +896,9 @@ Reset( )
 	WhichColor = WHITE;
 	WhichProjection = PERSP;
 	Xrot = Yrot = 0.;
+	Light0 = FALSE;
+	Light1 = FALSE;
+	Light2 = FALSE;
 }
 
 
