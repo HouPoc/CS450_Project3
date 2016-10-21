@@ -335,7 +335,7 @@ Display( )
 	glEnable(GL_LIGHTING);
 	//Put lights in 
 	//SetSpotLight(GL_LIGHT0, 0., 0., 0., 0., -1., 0., 0., 0., 1.);		//The spot light
-	SetPointLight(GL_LIGHT1, 1., 1., 1., 1., 1., 1.);					//White point light  white
+	//SetPointLight(GL_LIGHT1, 1., 1., 1., 1., 1., 1.);					//White point light  white
 	//SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
 	// set the eye position, look-at position, and up-vector:
 
