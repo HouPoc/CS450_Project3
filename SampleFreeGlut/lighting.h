@@ -32,6 +32,7 @@ void SetPointLight(int ilight, float x, float y, float z, float r, float g, floa
 	glLightfv(ilight, GL_AMBIENT, Array3(0., 0., 0.));
 	glLightfv(ilight, GL_DIFFUSE, Array3(r, g, b));
 	glLightfv(ilight, GL_SPECULAR, Array3(r, g, b));
+
 	glLightf(ilight, GL_CONSTANT_ATTENUATION, 1.);
 	glLightf(ilight, GL_LINEAR_ATTENUATION, 0.);
 	glLightf(ilight, GL_QUADRATIC_ATTENUATION, 0.);
@@ -62,6 +63,7 @@ SetMaterial(float r, float g, float b, float shininess)
 	glMaterialfv(GL_BACK, GL_DIFFUSE, MulArray3(1., White));
 	glMaterialfv(GL_BACK, GL_SPECULAR, Array3(0., 0., 0.));
 	glMaterialf(GL_BACK, GL_SHININESS, 2.f);
+
 	glMaterialfv(GL_FRONT, GL_EMISSION, Array3(0., 0., 0.));
 	glMaterialfv(GL_FRONT, GL_AMBIENT, Array3(r, g, b));
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, Array3(r, g, b));

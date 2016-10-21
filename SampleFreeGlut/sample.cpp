@@ -331,21 +331,22 @@ Display( )
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity( );
 
+	gluLookAt(4., 0., 3., 0., 0., 0., 0., 1., 0.);
 	glEnable(GL_LIGHTING);
 	//Put lights in 
 	//SetSpotLight(GL_LIGHT0, 0., 0., 0., 0., -1., 0., 0., 0., 1.);		//The spot light
-	//SetPointLight(GL_LIGHT1, 0., 3., -1., 1., 1., 1.);					//White point light  white
-	SetPointLight(GL_LIGHT2, 0., 4., -1.3, 0., 1., 0.);					//White point light      red
+	//SetPointLight(GL_LIGHT1, 0., 0., 0., 1., 1., 1.);					//White point light  white
+	SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
 	// set the eye position, look-at position, and up-vector:
 
-	gluLookAt( 4., 0., 3.,     0., 0., 0.,     0., 1., 0. );
+	
 
 
 	// rotate the scene:
 
 	glRotatef( (GLfloat)Yrot, 0., 1., 0. );
 	glRotatef( (GLfloat)Xrot, 1., 0., 0. );
-
+	
 
 	// uniformly scale the scene:
 
@@ -379,41 +380,45 @@ Display( )
 
 
 	// draw the cube:
-	glPushMatrix();
+	/*
+	glPushMatrix();							
 	glShadeModel(GL_SMOOTH);
 	glTranslatef(0., .5, 2.);
 	SetMaterial(1.0, 0.0, 0.0, 10.0);
-	glColor3f(1., 0., 0.);
+	glColor3f(1., 0., 0.);					//red
 	glutSolidCube(.7);
 	glPopMatrix();
-	// draw the sphere
-	glPushMatrix();
+	*/
+	// draw the sphere						//yellow
 	glShadeModel(GL_SMOOTH);
-	glTranslatef(0., -1., -.5);
-	SetMaterial(1.0, 1.0, 0.0, 5.0);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	//glTranslatef(0., -1., -.5);
+	SetMaterial(1.0, 1.0, 0.0, 50.0);
 	glColor3f(1., 1., 0.);
-	glutSolidSphere(.5, 20, 20);
+	glutSolidSphere(1., 20, 16);
 	glPopMatrix();
-	//draw the Torus
+	
+	//draw the Torus						//green
+	/*
 	glPushMatrix();
 	glShadeModel(GLU_FLAT);
 	glTranslatef(0., 1., -2.);
 	SetMaterial(0.0, 0.0, 1.0, 1.0);
-	glColor3f(0., 0., 1.);
-	glutSolidTorus(.3, 1., 20, 20);
+	glColor3f(0., 1., 0.);
+	glutSolidTorus(.4, 1., 20, 20);
 	glPopMatrix();
-
+	*/
 	// possibly draw the axes:
-
+	/*
 	if (AxesOn != 0)
 	{
 		glPushMatrix();
-		SetMaterial(1.0, 1.0, 1.0, 1.0);
 		glColor3fv(&Colors[WhichColor][0]);
 		glCallList(AxesList);
 		glPopMatrix();
 	}
-
+	*/
 	// draw some gratuitous text that is fixed on the screen:
 	//
 	// the projection matrix is reset to define a scene whose
