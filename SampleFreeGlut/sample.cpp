@@ -339,7 +339,7 @@ Display( )
 	//Put lights in 
 	SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
 	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
-	SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 1., 1.);					//White point light      red
+	SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 0., 1.);					//White point light      red
 	if (Light0)
 		glEnable(GL_LIGHT0);
 	else
@@ -407,7 +407,7 @@ Display( )
 	glPushMatrix();
 	glTranslatef(0., -1., -.5);
 	glShadeModel(GL_SMOOTH);
-	SetMaterial(1.0, 1.0, 0.0, 50.0);
+	SetMaterial(1.0, 1.0, 0.0, 100.0);
 	glColor3f(1., 1., 0.);
 	glutSolidSphere(1., 20, 16);
 	glPopMatrix();
