@@ -183,8 +183,8 @@ int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
 bool	Freeze;					// Animation control
 bool	Light0, Light1, Light2;	// Light control
-
-
+float	Time, Time_P, Move_Unit;
+bool	direction;
 // function prototypes:
 
 void	Animate( );
@@ -264,14 +264,27 @@ main( int argc, char *argv[ ] )
 //
 // do not call Display( ) from here -- let glutMainLoop( ) do it
 
+#define MS_PER_CYCLE 4000
+
 void
 Animate( )
 {
 	// put animation stuff in here -- change some global variables
 	// for Display( ) to find:
-
+	int ms = glutGet(GLUT_ELAPSED_TIME);
+	ms %= MS_PER_CYCLE;
+	Time = (float)ms / (float)MS_PER_CYCLE;		// [0.,1.)
 	// force a call to Display( ) next time it is convenient:
-
+	if ((Time - Time_P) < 0)
+	{
+		direction = !direction;
+	}
+	if (direction)
+		Move_Unit = -Time;
+	else
+		Move_Unit = Time - 1;
+	Time_P = Time;
+	Move_Unit = Move_Unit * 2;
 	glutSetWindow( MainWindow );
 	glutPostRedisplay( );
 }
@@ -334,12 +347,15 @@ Display( )
 	glLoadIdentity( );
 
 	// set the eye position, look-at position, and up-vector:
-	gluLookAt(4., 0., 3., 0., 0., 0., 0., 1., 0.);
+	gluLookAt(4., 0., 1., 0., 0., 0.5, 0., 1., 0.);
 	glEnable(GL_LIGHTING);
 	//Put lights in 
-	SetSpotLight(GL_LIGHT0, 0., 3., 0., 0., -1., 0., 0., 1., 0.);		//The spot light		green
+	glPushMatrix();
+	glTranslatef(0., 0., Move_Unit*2.0);
+	SetSpotLight(GL_LIGHT0, 0., 1.8, 0., 0.0, -1., -1.0, 0.76, 0.4, 0.9);		//The spot light	
+	glPopMatrix();
 	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
-	SetPointLight(GL_LIGHT2, 1., 1., 1., 0., 0., 1.);					//White point light      red
+	SetPointLight(GL_LIGHT2, .5, 1., 1.2, 0., 0., 1.);					//White point light      blue
 	if (Light0)
 		glEnable(GL_LIGHT0);
 	else
@@ -396,6 +412,7 @@ Display( )
 	
 	glPushMatrix();							
 	glShadeModel(GL_SMOOTH);
+	glTranslatef(0., 0., Move_Unit);
 	glTranslatef(0., .5, 2.);
 	SetMaterial(1.0, 0.0, 0.0, 10.0);
 	glColor3f(1., 0., 0.);					//red
@@ -899,6 +916,8 @@ Reset( )
 	Light0 = FALSE;
 	Light1 = FALSE;
 	Light2 = FALSE;
+	direction = TRUE;
+	Freeze = TRUE;
 }
 
 

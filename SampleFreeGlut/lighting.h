@@ -43,7 +43,7 @@ void SetSpotLight(int ilight, float x, float y, float z, float xdir, float ydir,
 {
 	glLightfv(ilight, GL_POSITION, Array3(x, y, z));
 	glLightfv(ilight, GL_SPOT_DIRECTION, Array3(xdir, ydir, zdir));
-	glLightf(ilight, GL_SPOT_EXPONENT, 1.);
+	glLightf(ilight, GL_SPOT_EXPONENT, 2.);
 	glLightf(ilight, GL_SPOT_CUTOFF, 45.);
 	glLightfv(ilight, GL_AMBIENT, Array3(0., 0., 0.));
 	glLightfv(ilight, GL_DIFFUSE, Array3(r, g, b));
