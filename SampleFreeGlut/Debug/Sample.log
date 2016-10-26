@@ -1,8 +1,26 @@
 ﻿  sample.cpp
-c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(354): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(355): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(357): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(358): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(1117): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(61): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(62): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(63): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(66): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(67): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(68): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(78): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(79): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(83): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(84): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(101): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(121): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sphere.h(142): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(382): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(383): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(385): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(386): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(441): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(442): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(443): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(448): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(454): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\poi\documents\github\cs450_project3\samplefreeglut\sample.cpp(1176): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 sample.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
   Sample.vcxproj -> C:\Users\Poi\Documents\GitHub\CS450_Project3\SampleFreeGlut\.\Debug\Sample.exe

@@ -15,6 +15,8 @@
 
 
 #include "lighting.h"
+#include "bmptotexture.h"
+#include "sphere.h"
 //	This is a sample OpenGL / GLUT program
 //
 //	The objective is to draw a 3d object and change the color of the axes
@@ -183,8 +185,14 @@ int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
 bool	Freeze;					// Animation control
 bool	Light0, Light1, Light2;	// Light control
-float	Time, Time_P, Move_Unit;
+float   Time_P, Move_Unit;
 bool	direction;
+unsigned char *Texture;			// texture 
+int		height;
+int		width;
+int level, ncomps, border;
+static GLuint  texName;
+
 // function prototypes:
 
 void	Animate( );
@@ -200,6 +208,7 @@ void	DoStrokeString( float, float, float, float, char * );
 float	ElapsedSeconds( );
 void	InitGraphics( );
 void	InitLists( );
+void	InitTexture();
 void	InitMenus( );
 void	Keyboard( unsigned char, int, int );
 void	MouseButton( int, int, int, int );
@@ -227,7 +236,7 @@ main( int argc, char *argv[ ] )
 
 	InitGraphics( );
 
-
+	InitTexture();
 	// create the display structures that will not change:
 
 	InitLists( );
@@ -287,6 +296,25 @@ Animate( )
 	Move_Unit = Move_Unit * 2;
 	glutSetWindow( MainWindow );
 	glutPostRedisplay( );
+}
+
+
+void InitTexture() {
+	width = 1024;
+	height = 512;
+	level = 0;
+	ncomps = 3;
+	border = 0;
+	Texture = BmpToTexture("worldtex.bmp", &width, &height);
+	glGenTextures(1, &texName);
+	glBindTexture(GL_TEXTURE_2D, texName);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexImage2D(GL_TEXTURE_2D, level, ncomps, width, height, border, GL_RGB, GL_UNSIGNED_BYTE, Texture);
 }
 
 
@@ -352,7 +380,7 @@ Display( )
 	//Put lights in 
 	glPushMatrix();
 	glTranslatef(0., 0., Move_Unit*2.0);
-	SetSpotLight(GL_LIGHT0, 0., 1.8, 0., 0.0, -1., -1.0, 0.76, 0.4, 0.9);		//The spot light	
+	SetSpotLight(GL_LIGHT0, 0., 1.3, 0., 0., -1., -1., 0.76, 0.4, 0.9);		//The spot light	
 	glPopMatrix();
 	SetPointLight(GL_LIGHT1, 1., 1., -.6, 1., 1., 1.);					//White point light		white
 	SetPointLight(GL_LIGHT2, .5, 1., 1.2, 0., 0., 1.);					//White point light      blue
@@ -406,10 +434,29 @@ Display( )
 	// since we are using glScalef( ), be sure normals get unitized:
 
 	glEnable( GL_NORMALIZE );
-
-
+	glDisable(GL_LIGHTING);
+	//draw light source 
+	//spot light
+	glPushMatrix();
+	glTranslatef(0., 0., Move_Unit*2.0);
+	glTranslatef(0., 1.3, 0.0);
+	glColor3f(0.76, 0.4, 0.9);
+	glutSolidSphere(0.1, 10, 10);
+	glPopMatrix();
+	//point light white
+	glPushMatrix();
+	glTranslatef(1., 1., -.6);
+	glColor3f(1., 1., 1.);
+	glutSolidSphere(0.1, 10, 10);
+	glPopMatrix();
+	//point light blue
+	glPushMatrix();
+	glTranslatef(.5, 1., 1.2);
+	glColor3f(0., 0., 1.);
+	glutSolidSphere(0.1, 10, 10);
+	glPopMatrix();
 	// draw the cube:
-	
+	glEnable(GL_LIGHTING);
 	glPushMatrix();							
 	glShadeModel(GL_SMOOTH);
 	glTranslatef(0., 0., Move_Unit);
@@ -424,11 +471,19 @@ Display( )
 	glPushMatrix();
 	glTranslatef(0., -1., -.5);
 	glShadeModel(GL_SMOOTH);
-	SetMaterial(1.0, 1.0, 0.0, 100.0);
+	if (TextureOn)
+	{
+		glEnable(GL_TEXTURE_2D);
+		SetMaterial(1.0, 1.0, 1.0, 100.0);
+		glBindTexture(GL_TEXTURE_2D, texName);
+	}
+	else {
+		glDisable(GL_TEXTURE_2D);
+		SetMaterial(1.0, 1.0, 0.0, 100.0);
+	}
 	glColor3f(1., 1., 0.);
-	glutSolidSphere(1., 20, 16);
+	MjbSphere(1., 20, 20);
 	glPopMatrix();
-	
 	//draw the Torus						//green
 	
 	glPushMatrix();
@@ -790,7 +845,10 @@ Keyboard( unsigned char c, int x, int y )
 		case '0':
 			Light0 = !Light0;
 			break;
-
+		case 't':
+		case 'T':
+			TextureOn = !TextureOn;
+			break;
 		case '1':
 			Light1 = !Light1;
 			break;
@@ -918,6 +976,7 @@ Reset( )
 	Light2 = FALSE;
 	direction = TRUE;
 	Freeze = TRUE;
+	TextureOn = FALSE;
 }
 
 
