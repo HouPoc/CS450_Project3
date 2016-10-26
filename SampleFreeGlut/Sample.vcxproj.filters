@@ -23,5 +23,16 @@
     <ClInclude Include="lighting.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="bmptotexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="worldtex.bmp">
+      <Filter>Source Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
